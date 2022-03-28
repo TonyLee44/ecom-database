@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql');
+const path = require('path')
 
 const app = express();
 
@@ -21,7 +22,11 @@ db.connect(err => {
 
 app.use(cors());
 app.use(express.json());
-
+app
+.use(express.static(path.join(__dirname, 'public')))
+.set('views', path.join(__dirname, 'views'))
+.set('view engine', 'ejs')
+.get('/', (req, res) => res.render('pages/index'))
 app.get("/api/products", (req, res) => {
     db.query(`SELECT * FROM products`, (err, result) => {
         if (err) {
